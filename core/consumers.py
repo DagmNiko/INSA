@@ -34,6 +34,6 @@ class BlogConsumer(AsyncWebsocketConsumer):
         message = event["message"]
         name = event["name"]
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"message": message 'name': name}))
+        await self.send(text_data=json.dumps({"message": message, 'name': name}))
         
     
