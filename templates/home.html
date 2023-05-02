@@ -39,7 +39,7 @@
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
                 'message': message,
-                'name': 'message is encrypted!'
+                'name': 'message is encrypted'
             }));
             messageInputDom.value = '';
         };
