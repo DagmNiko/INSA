@@ -75,7 +75,10 @@ modules/
 __pycache__
 db.sqlite3
 media
-
+*.mp4
+userVideos/
+userprofile/
+TagImages/
 # Backup files # 
 *.bak 
 
