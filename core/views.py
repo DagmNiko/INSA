@@ -16,3 +16,10 @@ def home(request):
         'tags': tags,
     }
     return render(request, 'home.html', context)
+
+def blogs(request):
+    blog = Blog.objects.all().order_by('date_posted')
+    context = {
+        'blog': blog
+    }
+    return render(request, 'blogs.html', context)
