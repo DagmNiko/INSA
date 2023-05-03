@@ -2,15 +2,31 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Chat Room</title>
+    <title>INSA</title>
 </head>
 <body>
+    <div class="catagory">
+        <h2 class="catagory__heading">
+            Our Blogs
+        </h2>
+        <div class="catagory__content">
+            {% for blogs in blog %}
+            <div class="catagory__item">
+                <img src="{{ blogs.image.url }}" alt="" class="catagory__item__image">
+                <h3 class="catagory__item__text">{{blogs.title}}</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+
     <textarea id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
 
     <script>
-        {% comment %} const roomName = JSON.parse(document.getElementById('room-name').textContent); {% endcomment %}
 
         const chatSocket = new WebSocket(
             'ws://'
