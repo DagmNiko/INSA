@@ -1,12 +1,20 @@
 import json
 
+from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from core.models import *
+from accounts.models import *
+
+
 
 
 class BlogConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = 'blog'
-        self.room_group_name = self.room_name
+        self.user = self.scope["user"].email
+        print(self.user)
+        self.room_name = self.scope["url_route"]['kwargs']['blog_id']
+        print(self.scope["url_route"])
+        self.room_group_name = f'comment_{self.room_name}'
 
         # Join room group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -21,19 +29,35 @@ class BlogConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
-        name = text_data_json["name"]
+        blog = self.room_name
+        content = text_data_json["content"]
+        author = self.user
+
+
+
+        await self.save_new_blog(blog,content, author)
         # Send message to room group
         await self.channel_layer.group_send(
-            self.room_group_name, {"type": "chat_message", "message": message, "name": name}
+            self.room_group_name, {"type": "blog_fields", "blog": blog,"author": author, "content": content}
         )
-        print(f'Received message from {self.channel_name}: {message}')
+        # print(f'Received message from {self.channel_name}: {message}')
 
     # Receive message from room group
-    async def chat_message(self, event):
-        message = event["message"]
-        name = event["name"]
+    async def blog_fields(self, event):
+        blog = event["blog"]
+
+        # tags = event["tags"]
+        author = self.user
+        content = event["content"]
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"message": message, 'name': name}))
+        await self.send(text_data=json.dumps({"blog": blog, "author": author, "content": content}))
         
-    
+    @database_sync_to_async
+    def add_blog(self, blog,content, author):
+        account = Account.objects.get(email=author)
+        blog = Blog.objects.get(pk=blog)
+
+        return Comment.objects.create(author=account,blog=blog,content=content)
+        
+    async def save_new_blog(self, blog, content, author):
+        await self.add_blog(blog, content, author)

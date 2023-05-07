@@ -1,0 +1,5 @@
+
+sudo docker run -p 6379:6379 -d redis:5
+echo "opening your vscode 🚀"
+code .
+python manage.py runserver

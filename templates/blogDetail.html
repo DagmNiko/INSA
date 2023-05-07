@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>{{blog.title}}</h1>
+    <h2>{{blog.author}}</h2>
+    <small>{{blog.date_posted}}</small>
+    <p>{{blog.content}}</p>
+    {%if comments%}
+        <h2>--------COMMENTS----------</h2>
+        {%csrf_token%}
+        {{form.video}}
+        {{form.news}}
+        {{form.author}}
+        {{form.blog}}
+        {{form.content}}
+        <input type="button" id="btn" value="comment">
+        <ul class="catagory__content">
+           
+            {%for comment in comments%}
+                <li>{{comment.author}} - <small>{{comment.date_posted}}</small><br><b>{{comment.content}}</b></li>
+            {%endfor%}
+        </ul>
+    {%else%}
+        <h2>--------NO COMMENTS----------</h2>
+    {%endif%}
+    {{ blog_id|json_script:"blog-id" }}
+    <script>
+        const roomId = JSON.parse(document.getElementById('blog-id').textContent);
+        let blog = document.querySelector('#id_blog');
+        let content = document.querySelector('#id_content');
+        let video = document.querySelector('#id_video');
+        let author = document.querySelector('#id_author');
+        let news = document.querySelector('#id_news');
+        let btn = document.querySelector('#btn');
+
+        blog.style.display = 'none';
+        video.style.display = 'none';
+        news.style.display = 'none';
+        author.style.display = 'none';
+        btn.style.display = 'none';
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/blogs/'
+            + roomId
+            + '/'
+        );
+        const date = new Date(Date.UTC());
+        {% comment %} let ampm = date.getHours() >= 12 ? 'pm' : 'am'; {% endcomment %}
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log(data)
+            
+            document.querySelector('.catagory__content').innerHTML = `<li>${data.author} - <small>now</small><br><b>${data.content}</b></li>\n${document.querySelector('.catagory__content').innerHTML}`;
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+        content.onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                btn.click();
+            }
+        };
+
+        btn.addEventListener('click', e => {
+            // e.preventDefault();
+            chatSocket.send(JSON.stringify({
+                'content': content.value,
+                // 'tags': tags,
+            }));
+            content.value = ''
+        })
+    </script>
+</body>
+
+</html>

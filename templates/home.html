@@ -10,55 +10,19 @@
             Our Blogs
         </h2>
         <div class="catagory__content">
-            {% for blogs in blog %}
+            {%for blogs in blog %}
+                 
             <div class="catagory__item">
-                <img src="{{ blogs.image.url }}" alt="" class="catagory__item__image">
-                <h3 class="catagory__item__text">{{blogs.title}}</h3>
+                <img src="{{blogs.image.url}}" alt="" class="catagory__item__image">
+                <h3 class="catagory__item__text"><a href="{%url 'blog-detail' blogs.pk %}">{{blogs.title}}</a></h3>
             </div>
-            {% endfor %}
+            {%endfor%}
         </div>
     </div>
 
 
 
 
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
 
-    <script>
-
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/'
-        );
-
-        chatSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.name+' ~ '+data.message + '\n');
-        };
-
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chat-message-submit').click();
-            }
-        };
-
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message,
-                'name': 'message is encrypted'
-            }));
-            messageInputDom.value = '';
-        };
-    </script>
 </body>
 </html>

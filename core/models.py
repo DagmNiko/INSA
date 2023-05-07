@@ -10,7 +10,7 @@ class Blog(models.Model):
     date_posted = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(Account, on_delete=models.CASCADE)
     referral = models.URLField()
-    tags = models.ManyToManyField('Tag', blank=True)
+    # tags = models.ManyToManyField('Tag', blank=True)
     #like
     #share
     
