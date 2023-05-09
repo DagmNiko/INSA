@@ -33,12 +33,14 @@ class BlogConsumer(AsyncWebsocketConsumer):
         content = text_data_json["content"]
         author = self.user
 
-
-
-        await self.save_new_blog(blog,content, author)
+        comment = text_data_json["comment"]
+        if comment == '':
+            await self.save_new_blog(blog,content, author)
+        else:
+            await self.save_new_reply(comment, content, author)
         # Send message to room group
         await self.channel_layer.group_send(
-            self.room_group_name, {"type": "blog_fields", "blog": blog,"author": author, "content": content}
+            self.room_group_name, {"type": "blog_fields", "blog": blog,"author": author, "content": content, "comment": comment}
         )
         # print(f'Received message from {self.channel_name}: {message}')
 
@@ -49,8 +51,9 @@ class BlogConsumer(AsyncWebsocketConsumer):
         # tags = event["tags"]
         author = self.user
         content = event["content"]
+        comment = event["comment"]
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"blog": blog, "author": author, "content": content}))
+        await self.send(text_data=json.dumps({"blog": blog, "author": author, "content": content, 'comment': comment}))
         
     @database_sync_to_async
     def add_blog(self, blog,content, author):
@@ -61,3 +64,12 @@ class BlogConsumer(AsyncWebsocketConsumer):
         
     async def save_new_blog(self, blog, content, author):
         await self.add_blog(blog, content, author)
+    
+    @database_sync_to_async
+    def add_reply(self, comment, content, author):
+        account = Account.objects.get(email=author)
+        comment = Comment.objects.get(pk=comment)
+
+        return Replies.objects.create(author=account,comment=comment,content=content)
+    async def save_new_reply(self, comment, content, author):
+        await self.add_reply(comment, content, author)

@@ -10,29 +10,16 @@
 
 <body>
     <h1>Add Blogs</h1>
-    <form action="{% url 'home' %}" method="post" enctype="multipart/form-data">
+    {%if user.is_authenticated %}
+    <form method="post" enctype="multipart/form-data">
         <img src="" alt="" id="snipped">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" id="add" value="Add">
-
+        <button type="submit" id="add">Add Blog</button>
     </form>
-    {% comment %} <!-- <div class="form-group">
-            <label for="title">title</label>
-            {{ form.title }}
-        </div>
-        <div class="form-group">
-            <label for="tags">Tags</label>
-            {{ form.tags }}
-        </div>
-        <div class="form-group">
-            <label for="referral">Referral</label>
-            {{ form.referral }}
-        </div>
-        <div class="form-group">
-            <label for="content">Content</label>
-            {{ form.content }}
-        </div> --> {% endcomment %}
+    {%else%}
+    <a href="#">Sign In</a> First!
+    {%endif%}
     <style>
         #snipped {
             width: 10rem;
@@ -41,28 +28,9 @@
             object-fit: cover;
         }
     </style>
+
     <script>
-
-        {% comment %} const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/'
-        );
-        let title = document.getElementById('title');
         let image = document.getElementById('image');
-        let content = document.getElementById('content');
-        let referral = document.getElementById('referral');
-        image.accept = 'media/BlogImages';
-        title.value = '';
-        content.value = '';
-        image.value = '';
-        referral.value = '';
-        document.getElementById("snipped").src = '';
-        document.querySelector('#id_author').value = '';
-
-        print(image)
-        ///media/BlogImages/
-
         image.addEventListener('change', e => {
             let filer = e.target.files[0];
             let reader = new FileReader();
@@ -73,22 +41,14 @@
             window.filer = filer
         })
 
+    </script>
 
 
 
 
-        chatSocket.onclose = function (e) {
-            console.error('Chat socket closed unexpectedly');
-        };
 
-        title.value = '';
-        content.value = '';
-        image.value = '';
-        referral.value = '';
-        document.getElementById("snipped").src = '';
-        document.querySelector('#id_author').value = '';
-        }
-        ); {% endcomment %}
+
+
 
     </script>
 </body>

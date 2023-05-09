@@ -15,6 +15,7 @@
             <div class="catagory__item">
                 <img src="{{blogs.image.url}}" alt="" class="catagory__item__image">
                 <h3 class="catagory__item__text"><a href="{%url 'blog-detail' blogs.pk %}">{{blogs.title}}</a></h3>
+                <p class="short">{{blogs.content|slice:20}}...   </p>
             </div>
             {%endfor%}
         </div>

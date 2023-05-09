@@ -31,8 +31,8 @@ def addBlog(request):
     if request.method == 'POST':
         form = BlogForm(request.POST, request.FILES)
         if form.is_valid():
-            
             form.save()
+            return redirect('home')
             
     else:
         form = BlogForm()
@@ -44,7 +44,9 @@ def addBlog(request):
 def BlogDetail(request, blog_id):
     blog = get_object_or_404(Blog, pk=blog_id)
     comments = Comment.objects.filter(blog=blog).order_by('-pk')
+    replies = Replies.objects.all().order_by('-pk')
     form = CommentForm()
+    replyForm = ReplyForm()
     # former = get_object_or_404(Blog)
     # if request.method == 'POST':
     #     form = CommentForm(request.POST, request.FILES)
@@ -58,6 +60,8 @@ def BlogDetail(request, blog_id):
         'blog': blog,
         'comments': comments,
         'form': form,
-        'blog_id': blog_id
+        'blog_id': blog_id,
+        'replyForm': replyForm,
+        'replies': replies
     }
     return render(request, 'blogDetail.html', context)

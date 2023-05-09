@@ -13,38 +13,82 @@
     <h2>{{blog.author}}</h2>
     <small>{{blog.date_posted}}</small>
     <p>{{blog.content}}</p>
-    {%if comments%}
-        <h2>--------COMMENTS----------</h2>
-        {%csrf_token%}
-        {{form.video}}
-        {{form.news}}
-        {{form.author}}
-        {{form.blog}}
-        {{form.content}}
-        <input type="button" id="btn" value="comment">
-        <ul class="catagory__content">
-           
-            {%for comment in comments%}
-                <li>{{comment.author}} - <small>{{comment.date_posted}}</small><br><b>{{comment.content}}</b></li>
-            {%endfor%}
-        </ul>
-    {%else%}
-        <h2>--------NO COMMENTS----------</h2>
-    {%endif%}
+    {% comment %} {%if comments%} {% endcomment %}
+    <h2 id="h2">-------- NO COMMENTS ----------</h2>
+    {%csrf_token%}
+    {{form.video}}
+    {{form.news}}
+    {{form.author}}
+    {{form.blog}}
+    {{form.content | safe}}
+    <input type="button" id="btn" value="comment">
+    <ul class="catagory__content">
+
+        {%for comment in comments%}
+        <li>{{comment.author}} - <small>{{comment.date_posted}}</small><br><b>{{comment.content}}</b></li>
+        <div class="replies {{comment.pk}}">
+            {%csrf_token%}
+            {{replyForm.author}}
+            {{replyForm.content | safe}}
+            <input type="button" class="replyBtn" value="Reply">
+            <ul class="catagory__replies comm{{comment.pk}}">
+
+                {%for reply in replies%}
+                {%if reply.comment.pk == comment.pk%}
+                <li>{{reply.author}} - <small>{{reply.date_posted}}</small><br><b>{{reply.content}}</b></li>
+                {%else%}
+                {% endif%}
+                {%empty%}
+                {%endfor%}
+            </ul>
+        </div>
+        {%endfor%}
+    </ul>
+    <style>
+        .catagory__content {
+            background-color: grey;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .catagory__replies {
+            background-color: #111;
+            transform: translateX(10%);
+            color: white;
+            font-size: .9rem;
+            font-weight: lighter;
+            font-style: italic;
+            margin: .3rem;
+            border-radius: 15px;
+        }
+    </style>
     {{ blog_id|json_script:"blog-id" }}
     <script>
         const roomId = JSON.parse(document.getElementById('blog-id').textContent);
         let blog = document.querySelector('#id_blog');
-        let content = document.querySelector('#id_content');
+        let content = document.querySelector('.comment');
+        let replyContent = document.querySelectorAll('.content');
         let video = document.querySelector('#id_video');
-        let author = document.querySelector('#id_author');
+        let author = document.querySelectorAll('[name="author"]');
         let news = document.querySelector('#id_news');
         let btn = document.querySelector('#btn');
+        let replyBtn = document.querySelectorAll('.replyBtn');
+        let h2 = document.querySelector('#h2');
+        let catagory__content = document.querySelector('.catagory__content');
+        let replies = document.querySelector('.replies');
 
+        if (catagory__content.innerHTML.search('<li') == -1) {
+            h2.textContent = '-------- NO COMMENTS ----------'
+        } else {
+            h2.textContent = '--------COMMENTS----------'
+        }
         blog.style.display = 'none';
         video.style.display = 'none';
         news.style.display = 'none';
-        author.style.display = 'none';
+        author = [...author]
+        author.forEach((item, index) => item.style.display = 'none')
         btn.style.display = 'none';
 
         const chatSocket = new WebSocket(
@@ -54,20 +98,26 @@
             + roomId
             + '/'
         );
-        const date = new Date(Date.UTC());
-        {% comment %} let ampm = date.getHours() >= 12 ? 'pm' : 'am'; {% endcomment %}
+
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             console.log(data)
-            
-            document.querySelector('.catagory__content').innerHTML = `<li>${data.author} - <small>now</small><br><b>${data.content}</b></li>\n${document.querySelector('.catagory__content').innerHTML}`;
+
+            if (data.comment == '') {
+                document.querySelector('.catagory__content').innerHTML = `<li>${data.author} - <small>now</small><br><b>${data.content}</b></li><button id="repl" onclick="location.reload()">Reply</button>\n${document.querySelector('.catagory__content').innerHTML}`;
+                h2.textContent = '--------COMMENTS----------';
+            } else {
+                document.querySelector(`.comm${data.comment}`).innerHTML = `<li>${data.author} - <small>now</small><br><b>${data.content}</b></li>\n${document.querySelector(`.comm${data.comment}`).innerHTML}`;
+
+            }
         };
 
         chatSocket.onclose = function (e) {
             console.error('Chat socket closed unexpectedly');
         };
-        content.onkeyup = function(e) {
+        content.onkeyup = function (e) {
             if (e.keyCode === 13) {  // enter, return
+                // h2.textContent = '--------COMMENTS----------'
                 btn.click();
             }
         };
@@ -76,9 +126,30 @@
             // e.preventDefault();
             chatSocket.send(JSON.stringify({
                 'content': content.value,
+                'comment': ''
                 // 'tags': tags,
             }));
             content.value = ''
+        })
+        replyBtn = [...replyBtn]
+        replyContent = [...replyContent]
+        replyBtn.forEach((replyBtn, index) => {
+            replyBtn.style.display = 'none';
+            replyContent[index].onkeyup = function (e) {
+                if (e.keyCode === 13) {  // enter, return
+                    replyBtn.click();
+                }
+            };
+            replyBtn.addEventListener('click', e => {
+                // e.preventDefault();
+                console.log('hey ' + replyContent[index].value, replyBtn.parentElement.classList[1])
+                chatSocket.send(JSON.stringify({
+                    'content': replyContent[index].value,
+                    'comment': replyBtn.parentElement.classList[1]
+                    // 'tags': tags,
+                }));
+                replyContent[index].value = ''
+            })
         })
     </script>
 </body>
