@@ -14,5 +14,15 @@
         {{ form.as_p }}
         <button type="submit" id="add">Sign In</button>
     </form>
+    <script>
+        let password = document.getElementById('id_password');
+        let password1 = document.getElementById('id_password1');
+        password.parentElement.style.display = 'none';
+        password.type = 'password';
+        password1.addEventListener('keyup', () => {
+            
+            password.value = password1.value
+            })
+    </script>
 </body>
 </html>
