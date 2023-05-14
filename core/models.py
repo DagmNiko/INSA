@@ -2,14 +2,17 @@ from django.db import models
 from django.forms import ValidationError
 from accounts.models import Account
 
+
+
+
 # Create your models here.
 class Blog(models.Model):
-    image = models.ImageField(upload_to="BlogImages", blank=True, null=True)
+    image = models.ImageField(upload_to='BlogImages/main/', blank=True, null=True)
     title = models.CharField(max_length=100)
     content = models.TextField()
     date_posted = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(Account, on_delete=models.CASCADE)
-    referral = models.URLField()
+    referral = models.URLField() 
     # tags = models.ManyToManyField('Tag', blank=True)
     #like
     #share
@@ -19,6 +22,12 @@ class Blog(models.Model):
     
     # def get_absolute_url(self):
     #     return reverse('blog-detail', args=[str(self.id)])
+
+
+class TableOfContent(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, blank=True, null=True)
+    TOCtitle = models.CharField(max_length=550)
+    placeId = models.CharField(max_length=150) #more like an id for its section like #home
 
 class Video(models.Model):
     title = models.CharField(max_length=100)

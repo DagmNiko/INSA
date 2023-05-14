@@ -27,12 +27,14 @@ def blogs(request):
 
 def addBlog(request):
     form = BlogForm()
+    toc = TOCForm()
     # former = get_object_or_404(Blog)
     if request.method == 'POST':
         form = BlogForm(request.POST, request.FILES)
         if form.is_valid():
+            # toc.save()
             form.save()
-            return redirect('home')
+            return redirect('add-toc')
             
     else:
         form = BlogForm()
@@ -41,11 +43,29 @@ def addBlog(request):
     }
     return render(request, 'addBlog.html', context)
 
+def addTOC(request):
+    form = TOCForm()
+    # former = get_object_or_404(Blog)
+    if request.method == 'POST':
+        form = TOCForm(request.POST)
+        if form.is_valid():
+            print(request.POST['TOCtitle'])
+
+            return redirect('home')
+            
+    else:
+        form = TOCForm()
+    context = {
+        'toc': form,
+    }
+    return render(request, 'addTOC.html', context)
+
 def BlogDetail(request, blog_id):
     blog = get_object_or_404(Blog, pk=blog_id)
     comments = Comment.objects.filter(blog=blog).order_by('-pk')
     replies = Replies.objects.all().order_by('-pk')
     form = CommentForm()
+    toc = TableOfContent.objects.filter(blog=blog)
     replyForm = ReplyForm()
     # former = get_object_or_404(Blog)
     # if request.method == 'POST':
@@ -62,6 +82,7 @@ def BlogDetail(request, blog_id):
         'form': form,
         'blog_id': blog_id,
         'replyForm': replyForm,
-        'replies': replies
+        'replies': replies,
+        'toc': toc,
     }
     return render(request, 'blogDetail.html', context)

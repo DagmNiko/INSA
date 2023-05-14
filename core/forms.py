@@ -31,3 +31,10 @@ class ReplyForm(ModelForm):
         widgets = {
             'content': forms.TextInput(attrs={'class': 'content', 'placeholder': 'Write your replies here...'})
         }
+
+
+
+class TOCForm(ModelForm):
+    class Meta:
+        model = TableOfContent
+        fields = '__all__'

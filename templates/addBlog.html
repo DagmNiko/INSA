@@ -15,10 +15,12 @@
         <img src="" alt="" id="snipped">
         {% csrf_token %}
         {{ form.as_p }}
+
+
         <button type="submit" id="add">Add Blog</button>
     </form>
     {%else%}
-    <a href="#">Sign In</a> First!
+    <a href="(%url 'signin'%)">Sign In</a> First!
     {%endif%}
     <style>
         #snipped {

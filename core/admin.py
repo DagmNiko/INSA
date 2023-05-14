@@ -20,9 +20,13 @@ class ReplyAdimin(admin.ModelAdmin):
 class TagAdimin(admin.ModelAdmin):
     list_display = ['name']
 
+class TOCAdimin(admin.ModelAdmin):
+    list_display = ['TOCtitle', 'placeId']
+
 admin.site.register(Blog, BlogAdmin)
 admin.site.register(Video, VideoAdimin)
 admin.site.register(News, NewsAdimin)
 admin.site.register(Comment, CommentAdimin)
 admin.site.register(Replies, ReplyAdimin)
 admin.site.register(Tag, TagAdimin)
+admin.site.register(TableOfContent,TOCAdimin)

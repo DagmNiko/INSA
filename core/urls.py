@@ -6,7 +6,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', views.home, name='home'),
     path('blogs/', views.blogs, name='blogs'),
-    path('AddBlog/', views.addBlog, name='add-blogs'),
+    path('AddBlog/1/', views.addBlog, name='add-blogs'),
+    path('AddBlog/2/', views.addTOC, name='add-toc'),
     path('blogs/<int:blog_id>/', views.BlogDetail, name='blog-detail')
 ]
 if settings.DEBUG:
