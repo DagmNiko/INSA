@@ -48,9 +48,19 @@ def addTOC(request):
     # former = get_object_or_404(Blog)
     if request.method == 'POST':
         form = TOCForm(request.POST)
+        title = None
+        placeId = None
         if form.is_valid():
-            print(request.POST['TOCtitle'])
-
+            print(request.POST)
+            for req in request.POST:
+                if 'TOCtitle' in req:
+                   title = request.POST[req]
+                   if req[8:]:
+                       placeId = request.POST[f'placeId{req[8:]}']
+                   else:
+                       placeId = request.POST['placeId']
+                   TableOfContent.objects.create(blog=Blog.objects.get(pk=request.POST['blog']), TOCtitle=title, placeId=placeId)  
+                    
             return redirect('home')
             
     else:

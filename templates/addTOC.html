@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Add your table of contents</h1>
+    <h1>Add your table of contentsssss</h1>
     {%if user.is_authenticated %}
     <form method="post">
         {% csrf_token %}
@@ -21,11 +21,23 @@
     {%endif%}
     <script>
         let span = document.querySelector('body > button');
-        let btn = document.querySelector('form > button');
+        
         let form = document.querySelector('form');
         let body = document.querySelector('body');
+        
+        
         const some = () => {
-    
+            let TOCprev = document.querySelector('#id_TOCtitle');
+            TOCprev.id = `id_TOCtitle${Math.random()}`
+            TOCprev.name = `TOCtitle${TOCprev.id.slice(11)}`
+
+            let placeIdPrev = document.querySelector('#id_placeId');
+            placeIdPrev.id = `id_placeId${TOCprev.id.slice(11)}`
+            placeIdPrev.name = `placeId${TOCprev.id.slice(11)}`
+
+
+            let btn = document.querySelector('#add');
+            
             btn.remove()
             form.innerHTML += `
 
@@ -33,8 +45,10 @@
         <button type="submit" id="add">Add subtitle</button>    
          
 `;
+            // document.querySelector(`#${idPrev}`).value = valPrev;
 
-        
+            let select = document.getElementsByTagName('select');
+            document.querySelector('[name="blog"]').value = select[0].lastElementChild.innerHTML
         }
     </script>
 </body>
