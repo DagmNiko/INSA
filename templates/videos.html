@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<form action="{% url 'blogs'%}">
+    <input type="text" name="searchInput" id="srchInp">
+    <button type="submit">search</button>
+    <a href="{%url 'add-blogs' %}" class="addBlog">Add New Video</a>
+</form>
+<div class="catagory">
+    <h2 class="catagory__heading">
+        Our Videos
+    </h2>
+    <div class="catagory__content" style="width:100%;display: flex;overflow-x: scroll;overflow-y: hidden;">
+        {%for videos in video %}
+             
+        <div class="catagory__item">
+            <img src="{{videos.thumbnail.url}}" alt="" class="catagory__item__image">
+            <h3 class="catagory__item__text"><a href="{%url 'video-detail' videos.pk %}">{{videos.title}}</a></h3>
+            <p class="short" aria-label="{{videos.description}}">{{videos.description|slice:25}}...   </p>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+</body>
+</html>

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from accounts.models import Account
 
-from core.models import Blog
-from .serializers import BlogSerializer, UserSerializer
+from core.models import Blog, Video
+from .serializers import BlogSerializer, UserSerializer, VideoSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -43,4 +43,16 @@ def users(request):
 def userDetail(request, pk):
     user = Account.objects.get(pk=pk)
     serializer = UserSerializer(user)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def videos(request):
+    video = Video.objects.all()
+    serializer = VideoSerializer(video, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def videoDetail(request, pk):
+    video = Video.objects.get(pk=pk)
+    serializer = VideoSerializer(video)
     return Response(serializer.data)

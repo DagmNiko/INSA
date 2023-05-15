@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from core.forms import *
-
+from django.views.generic import DeleteView, UpdateView
 from core.models import *
 
 # Create your views here.
@@ -61,7 +61,7 @@ def addTOC(request):
                        placeId = request.POST['placeId']
                    TableOfContent.objects.create(blog=Blog.objects.get(pk=request.POST['blog']), TOCtitle=title, placeId=placeId)  
                     
-            return redirect('home')
+            return redirect('blogs')
             
     else:
         form = TOCForm()
@@ -96,3 +96,46 @@ def BlogDetail(request, blog_id):
         'toc': toc,
     }
     return render(request, 'blogDetail.html', context)
+
+class updateBlog(UpdateView):
+    model = Blog
+    template_name = 'updateBlog.html'
+    fields = ['image', 'title', 'content', 'referral','tags']
+
+
+
+
+class deleteBlog(DeleteView):
+    model = Blog
+    template_name = "deleteBlog.html"
+
+
+def videos(request):
+    video = Video.objects.all().order_by('date_posted')
+    context = {
+        'video': video
+    }
+    return render(request, 'videos.html', context)
+
+def videoDetail(request, pk):
+    video = get_object_or_404(Video, pk=pk)
+    context = {
+        'video': video
+    }
+    return render(request, 'videoDetail.html', context)
+
+
+def addVideo(request):
+    form = VideoForm()
+    if request.method == 'POST':
+        form = VideoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('videos')
+            
+    else:
+        form = VideoForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'addVideo.html', context)

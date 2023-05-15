@@ -1,50 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    <h1>All Blogs</h1>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
+    <!-- <form action="{% url 'blogs'%}"> -->
+    <nav style="display: flex;">
+        <div class="wrapper" style="display: flex;">
+            <input type="text" name="searchInput" id="srchInp">
+            <div class="dropdown">
+                <div class="currently"></div>
+                <div class="lists">
+                    <button class="list" id="all">All</button>
+                    <button class="list" id="title">Title</button>
+                    <button class="list" id="username">Username</button>
+                    <button class="list" id="description">Description</button>
+                </div>
+            </div>
+        </div>
+        <a href="{%url 'add-blogs' %}" class="addBlog">Add New Blog</a>
+    </nav>
 
+    <!-- </form> -->
+    <div class="catagory">
+        <h2 class="catagory__heading" style="background-color: white;">
+            Our Blogs
+        </h2>
+        <div class="catagory__content">
+            <p class="noresult"
+                style="position: absolute;font-weight: bolder;color: gray;font-size: 2rem;top: 5rem;left: 50%;transform: translateX(-50%);z-index: -1;">
+            </p>
+            {%for blogs in blog %}
+            <div class="catagory__item" style="background-color: white;">
+                <img src="{{blogs.image.url}}" alt="" class="catagory__item__image">
+                <h3 class="catagory__item__text"><a href="{%url 'blog-detail' blogs.pk %}">{{blogs.title}}</a>
+                    <p>{{blogs.author.username}}</p>
+                </h3>
+                <p class="short">{{blogs.content|slice:20}}...</p>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+    <style>
+        /* .dropdown {
+        position: relative; 
+    }
+    .dropdown * {
+        position: absolute;
+        background-color: white;
+        left: 0;
+        top: 0;
+        z-index: 0;
+    }
+    .currently {
+        background-color: white;
+        z-index: 1;
+        width: 100%;
+    }
+    .wrapper input {
+        width: 100%;
+    }
+    .wrapper .lists {
+        position: absolute;
+        right: 5rem;
+        
+    } */
+    </style>
     <script>
+        let titles = document.querySelectorAll('.catagory__item__text a');
+        titles = [...titles]
+        let username = document.querySelectorAll('.catagory__item__text p');
+        username = [...username]
+        let desc = document.querySelectorAll('.short');
+        desc = [...desc]
+        console.log(titles)
+        let spans = document.querySelectorAll('.lists button');
+        spans = [...spans]
 
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/'
-        );
-
-        chatSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.name+' ~ '+data.message + '\n');
-        };
-
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chat-message-submit').click();
+        let currently = document.querySelector('.currently');
+        currently.innerText = 'All'
+        spans.forEach(span => {
+            span.onclick = () => {
+                currently.innerText = span.innerText;
             }
-        };
+        })
+        let inp = document.querySelector('#srchInp');
+        let noresult = document.querySelector('.noresult');
+        inp.addEventListener('keyup', () => {
+            if (currently.innerText == 'All') {
+                username.forEach((usernames) => {
+                    titles.forEach((title) => {
+                        desc.forEach((descs) => {
+                            if (usernames.innerText.search(inp.value) == -1 && title.innerText.search(inp.value) == -1 && descs.textContent.search(inp.value) == -1) {
+                                usernames.parentElement.parentElement.style.display = 'none'
+                            } else {
+                                usernames.parentElement.parentElement.style.display = 'block'
+                            }
+                        })
+                    })
+                });
+                // if () {
+                    //     title.parentElement.parentElement.style.display = 'none'
+                        
+                    // } else {
+                    //     title.parentElement.parentElement.style.display = 'block'
+                    // }
 
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message,
-                'name': 'message is encrypted'
-            }));
-            messageInputDom.value = '';
-        };
+
+                
+            } else if (currently.innerText == 'Username') {
+                noresult.innerHTML = `username "${inp.value}" does not exist`;
+                username.forEach((usernames, index) => {
+                    if (usernames.innerText.search(inp.value) == -1) {
+                        usernames.parentElement.parentElement.style.display = 'none'
+                    } else {
+                        usernames.parentElement.parentElement.style.display = 'block'
+                    }
+                });
+
+            } else if (currently.innerText == 'Title') {
+                noresult.innerHTML = `Blog with title "${inp.value}" not found...<a style="text-decoration: none;" href="{%url 'add-blogs' %}">Add Blog ${inp.value}</a>`;
+                titles.forEach((title, index) => {
+                    if (title.innerText.search(inp.value) == -1) {
+                        title.parentElement.parentElement.style.display = 'none'
+                    } else {
+                        title.parentElement.parentElement.style.display = 'block'
+                    }
+
+                });
+            } else if (currently.innerText == 'Description') {
+                noresult.innerHTML = `Blog with description "${inp.value}" not found...<a style="text-decoration: none;" href="{%url 'add-blogs' %}">Add Blog ${inp.value}</a>`;
+                desc.forEach((descs, index) => {
+                    if (descs.textContent.search(inp.value) == -1) {
+                        descs.parentElement.style.display = 'none'
+                    } else {
+                        descs.parentElement.style.display = 'block'
+                    }
+
+                });
+            }
+        })
     </script>
 </body>
+
 </html>

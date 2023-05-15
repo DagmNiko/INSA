@@ -7,4 +7,6 @@ urlpatterns = [
     path('blogs/<int:pk>',blogDetail, name='api-blog-detail'),
     path('accounts/', users, name='api-users'),
     path('accounts/<int:pk>',userDetail, name='api-user-detail'),
+    path('videos/', videos, name='api-videos'),
+    path('videos/<int:pk>',videoDetail, name='api-video-detail'),
 ]

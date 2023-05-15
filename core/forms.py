@@ -11,11 +11,23 @@ class BlogForm(ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'id': 'title'}),
             'content': forms.Textarea(attrs={'id': 'contenter'}),
-            # 'tags': forms.CheckboxSelectMultiple(attrs={'id': 'tags'}),
+            'tags': forms.CheckboxSelectMultiple(attrs={'id': 'tags'}),
             'image': forms.FileInput(attrs={'id': 'image'}),
             'referral': forms.URLInput(attrs={'id': 'referral'}),
         }
 
+class VideoForm(ModelForm):
+    class Meta:
+        model = Video
+        fields = '__all__'
+        widgets = {
+            'title': forms.TextInput(),
+            'description': forms.Textarea(),
+            'tags': forms.CheckboxSelectMultiple(),
+            'thumbnail': forms.FileInput(),
+            'referral': forms.CheckboxSelectMultiple(),
+        }
+        
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
