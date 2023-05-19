@@ -73,9 +73,10 @@ class News(models.Model):
     author = models.ForeignKey(Account, on_delete=models.CASCADE)
     referral = models.ManyToManyField('Referral', blank=True)
     tags = models.ManyToManyField('Tag', blank=True)
-    #like
+    likes = models.ManyToManyField(Account, related_name='news_likes', blank=True)
     #share
-
+    def total_likes(self):
+        return self.likes.count()
     def __str__(self):
         return self.title
     

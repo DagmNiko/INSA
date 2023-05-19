@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from core.forms import *
 from django.views.generic import DeleteView, UpdateView
@@ -77,15 +78,7 @@ def BlogDetail(request, blog_id):
     form = CommentForm()
     toc = TableOfContent.objects.filter(blog=blog)
     replyForm = ReplyForm()
-    # former = get_object_or_404(Blog)
-    # if request.method == 'POST':
-    #     form = CommentForm(request.POST, request.FILES)
-    #     if form.is_valid():
-            
-    #         form.save()
-            
-    # else:
-    #     form = CommentForm()
+
     context = {
         'blog': blog,
         'comments': comments,
@@ -101,13 +94,6 @@ class updateBlog(UpdateView):
     model = Blog
     template_name = 'updateBlog.html'
     fields = ['image', 'title', 'content', 'referral','tags']
-
-
-
-
-class deleteBlog(DeleteView):
-    model = Blog
-    template_name = "deleteBlog.html"
 
 
 def videos(request):
@@ -139,3 +125,40 @@ def addVideo(request):
         'form': form
     }
     return render(request, 'addVideo.html', context)
+
+def news(request):
+    news = News.objects.all().order_by('date_posted')
+    context = {
+        'news': news
+    }
+    return render(request, 'news.html', context)
+
+def newsDetail(request, news_id):
+    news = get_object_or_404(News, pk=news_id)
+    comments = Comment.objects.filter(news=news).order_by('-pk')
+    replies = Replies.objects.all().order_by('-pk')
+    form = CommentForm()
+    likes = get_object_or_404(News, pk=news_id)
+    likes = likes.total_likes()
+    try:
+        toc = TableOfContent.objects.filter(news=news)
+    except:
+        toc = ''
+    replyForm = ReplyForm()
+
+    context = {
+        'news': news,
+        'comments': comments,
+        'form': form,
+        'news_id': news_id,
+        'replyForm': replyForm,
+        'replies': replies,
+        'toc': toc,
+        'likes': likes
+    }
+    return render(request, 'newsDetail.html', context)
+
+def LikeNews(request, pk):
+    news = get_object_or_404(News, pk=request.args.get('pk'))
+    news.likes.add(request.user)
+    return HttpResponseRedirect(reverse('news', args=[str(pk)]))

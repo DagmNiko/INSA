@@ -9,7 +9,6 @@
 </head>
 
 <body>
-    <!-- <form action="{% url 'blogs'%}"> -->
     <nav style="display: flex;">
         <div class="wrapper" style="display: flex;">
             <input type="text" name="searchInput" id="srchInp">
@@ -29,48 +28,23 @@
     <!-- </form> -->
     <div class="catagory">
         <h2 class="catagory__heading" style="background-color: white;">
-            Our Blogs
+            Our News
         </h2>
         <div class="catagory__content">
             <p class="noresult"
                 style="position: absolute;font-weight: bolder;color: gray;font-size: 2rem;top: 5rem;left: 50%;transform: translateX(-50%);z-index: -1;">
             </p>
-            {%for blogs in blog %}
+            {%for new in news %}
             <div class="catagory__item" style="background-color: white;">
-                <img src="{{blogs.image.url}}" alt="" class="catagory__item__image">
-                <h3 class="catagory__item__text"><a href="{%url 'blog-detail' blogs.pk %}">{{blogs.title}}</a>
-                    <p>{{blogs.author.username}}</p>
+                <img src="{{new.image.url}}" alt="" class="catagory__item__image">
+                <h3 class="catagory__item__text"><a href="{%url 'news-detail' new.pk %}">{{new.title}}</a>
+                    <p>{{new.author.username}}</p>
                 </h3>
-                <p class="short">{{blogs.content|slice:20}}...</p>
+                <p class="short">{{new.content|slice:20}}...</p>
             </div>
             {%endfor%}
         </div>
     </div>
-    <style>
-        /* .dropdown {
-        position: relative; 
-    }
-    .dropdown * {
-        position: absolute;
-        background-color: white;
-        left: 0;
-        top: 0;
-        z-index: 0;
-    }
-    .currently {
-        background-color: white;
-        z-index: 1;
-        width: 100%;
-    }
-    .wrapper input {
-        width: 100%;
-    }
-    .wrapper .lists {
-        position: absolute;
-        right: 5rem;
-        
-    } */
-    </style>
     <script>
         let titles = document.querySelectorAll('.catagory__item__text a');
         titles = [...titles]
@@ -84,16 +58,13 @@
 
         let currently = document.querySelector('.currently');
         currently.innerText = 'All'
-
         spans.forEach(span => {
             span.onclick = () => {
                 currently.innerText = span.innerText;
             }
         })
-
         let inp = document.querySelector('#srchInp');
         let noresult = document.querySelector('.noresult');
-        
         inp.addEventListener('keyup', () => {
             if (currently.innerText == 'All') {
                 username.forEach((usernames) => {
@@ -108,14 +79,14 @@
                     })
                 });
                 // if () {
-                    //     title.parentElement.parentElement.style.display = 'none'
-                        
-                    // } else {
-                    //     title.parentElement.parentElement.style.display = 'block'
-                    // }
+                //     title.parentElement.parentElement.style.display = 'none'
+
+                // } else {
+                //     title.parentElement.parentElement.style.display = 'block'
+                // }
 
 
-                
+
             } else if (currently.innerText == 'Username') {
                 noresult.innerHTML = `username "${inp.value}" does not exist`;
                 username.forEach((usernames, index) => {
