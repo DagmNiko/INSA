@@ -8,5 +8,10 @@
 </head>
 <body>
     <video src="{{video.content.url}}" controls></video>
+    {%for r in recommended%}
+        RECOMMENDED
+        <h2>{{r.title}}</h2>
+        <BR>
+    {%endfor%}
 </body>
 </html>

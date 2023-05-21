@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from core.forms import *
 from django.views.generic import DeleteView, UpdateView
 from core.models import *
-
+from django.core.mail import send_mail
 # Create your views here.
 def home(request):
     blog = Blog.objects.all().order_by('date_posted')
@@ -28,14 +28,13 @@ def blogs(request):
 
 def addBlog(request):
     form = BlogForm()
-    toc = TOCForm()
     # former = get_object_or_404(Blog)
     if request.method == 'POST':
         form = BlogForm(request.POST, request.FILES)
         if form.is_valid():
             # toc.save()
             form.save()
-            return redirect('add-toc')
+            return redirect('add-toc-blogs')
             
     else:
         form = BlogForm()
@@ -44,7 +43,7 @@ def addBlog(request):
     }
     return render(request, 'addBlog.html', context)
 
-def addTOC(request):
+def addTOCBlogs(request):
     form = TOCForm()
     # former = get_object_or_404(Blog)
     if request.method == 'POST':
@@ -55,12 +54,13 @@ def addTOC(request):
             print(request.POST)
             for req in request.POST:
                 if 'TOCtitle' in req:
-                   title = request.POST[req]
-                   if req[8:]:
-                       placeId = request.POST[f'placeId{req[8:]}']
-                   else:
-                       placeId = request.POST['placeId']
-                   TableOfContent.objects.create(blog=Blog.objects.get(pk=request.POST['blog']), TOCtitle=title, placeId=placeId)  
+                    title = request.POST[req]
+                if 'placeId' in req:
+                    if req[8:]:
+                        placeId = request.POST[f'placeId{req[7:]}']
+                    else:
+                        placeId = request.POST['placeId']
+                    TableOfContent.objects.create(blog=Blog.objects.get(pk=request.POST['blog']), TOCtitle=title, placeId=placeId)  
                     
             return redirect('blogs')
             
@@ -69,15 +69,50 @@ def addTOC(request):
     context = {
         'toc': form,
     }
-    return render(request, 'addTOC.html', context)
+    return render(request, 'addTOCBlogs.html', context)
+
+
+def addTOCNews(request):
+    form = TOCForm()
+    # former = get_object_or_404(Blog)
+    if request.method == 'POST':
+        form = TOCForm(request.POST)
+        title = None
+        placeId = None
+
+        if form.is_valid():
+            print(request.POST)
+            for req in request.POST:
+                if 'TOCtitle' in req:
+                    title = request.POST[req]
+                if 'placeId' in req:
+                    if req[8:]:
+                        placeId = request.POST[f'placeId{req[7:]}']
+                    else:
+                        placeId = request.POST['placeId']
+                    TableOfContent.objects.create(news=News.objects.get(pk=request.POST['news']), TOCtitle=title, placeId=placeId)  
+                    
+            return redirect('news')
+            
+    else:
+        form = TOCForm()
+    context = {
+        'toc': form,
+    }
+    return render(request, 'addTOCNews.html', context)
+
 
 def BlogDetail(request, blog_id):
-    blog = get_object_or_404(Blog, pk=blog_id)
+    blog = Blog.objects.get(pk=blog_id)
     comments = Comment.objects.filter(blog=blog).order_by('-pk')
     replies = Replies.objects.all().order_by('-pk')
     form = CommentForm()
     toc = TableOfContent.objects.filter(blog=blog)
     replyForm = ReplyForm()
+    likes = Blog.objects.get(pk=blog_id)
+    likes = likes.total_likes()
+    selected = list(Blog.objects.get(pk=blog_id).likes.values_list('email', flat=True))
+    accountSelected = str(request.user.email) in selected
 
     context = {
         'blog': blog,
@@ -87,6 +122,8 @@ def BlogDetail(request, blog_id):
         'replyForm': replyForm,
         'replies': replies,
         'toc': toc,
+        'likes': likes,
+        'selected':accountSelected
     }
     return render(request, 'blogDetail.html', context)
 
@@ -105,11 +142,20 @@ def videos(request):
 
 def videoDetail(request, pk):
     video = get_object_or_404(Video, pk=pk)
+    recommended = []
+    for vid in Video.objects.all():
+        splitted = vid.title.split(" ")
+        for i in splitted:
+            if vid.pk != pk:
+                if i.lower() in video.title.lower().split(" "):
+                    recommended.append(vid.title)
+                    
+    print(recommended)
     context = {
-        'video': video
+        'video': video,
+        'recommended': recommended
     }
     return render(request, 'videoDetail.html', context)
-
 
 def addVideo(request):
     form = VideoForm()
@@ -140,6 +186,8 @@ def newsDetail(request, news_id):
     form = CommentForm()
     likes = get_object_or_404(News, pk=news_id)
     likes = likes.total_likes()
+    selected = list(News.objects.get(pk=news_id).likes.values_list('email', flat=True))
+    accountSelected = str(request.user.email) in selected
     try:
         toc = TableOfContent.objects.filter(news=news)
     except:
@@ -154,11 +202,48 @@ def newsDetail(request, news_id):
         'replyForm': replyForm,
         'replies': replies,
         'toc': toc,
-        'likes': likes
+        'likes': likes,
+        'selected':accountSelected
     }
-    return render(request, 'newsDetail.html', context)
+    return render(request, 'newsDetai.html', context)
 
-def LikeNews(request, pk):
-    news = get_object_or_404(News, pk=request.args.get('pk'))
-    news.likes.add(request.user)
-    return HttpResponseRedirect(reverse('news', args=[str(pk)]))
+
+
+def addNews(request):
+    form = NewsForm()
+    if request.method == 'POST':
+        form = NewsForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('add-toc-news')
+            
+    else:
+        form = NewsForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'addNews.html', context)
+
+
+def contacts(request):
+    form = ContactForm()
+    if request.method == 'POST':
+        form = ContactForm(request.POST, request.FILES)
+        if form.is_valid():
+            send_mail(
+                f'Feedback from user{request.user.email}(request.user.username): {request.POST["subject"]}',
+                request.POST['body'],
+                request.user.email,
+                ["dagmniko79@gmail.com"]
+
+            )
+            form.save()
+            
+            return redirect('home')
+            
+    else:
+        form = ContactForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'contacts.html', context)

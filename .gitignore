@@ -75,6 +75,7 @@ modules/
 __pycache__
 db.sqlite3
 media
+insa/settings.py
 *.mp4
 userVideos/
 userprofile/

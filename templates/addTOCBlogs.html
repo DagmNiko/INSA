@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Add your table of contentsssss</h1>
+    <h1>Add your table of contents</h1>
     {%if user.is_authenticated %}
     <form method="post">
         {% csrf_token %}
@@ -19,6 +19,7 @@
     {%else%}
     <a href="(%url 'signin'%)">Sign In</a> First!
     {%endif%}
+
     <script>
         let span = document.querySelector('body > button');
         

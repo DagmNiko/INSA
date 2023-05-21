@@ -7,11 +7,11 @@ urlpatterns = [
     path('', views.home, name='home'),
 
     path('blogs/', views.blogs, name='blogs'),
-    path('AddBlog/1/', views.addBlog, name='add-blogs'),
-    path('AddBlog/2/', views.addTOC, name='add-toc'),
+    path('AddBlog/', views.addBlog, name='add-blogs'),
+    path('AddTOCBlogs/', views.addTOCBlogs, name='add-toc-blogs'),
     path('blogs/<int:blog_id>/', views.BlogDetail, name='blog-detail'),
-    # path('blogs/delete/<int:pk>', views.deleteBlog.as_view(), name='blog-delete'),
     path('blogs/update/<int:pk>', views.updateBlog.as_view(), name='blog-update'),
+    # path('blogs/delete/<int:pk>', views.deleteBlog.as_view(), name='blog-delete'),
 
     path('videos/', views.videos, name='videos'),
     path('videos/<int:pk>/', views.videoDetail, name="video-detail"), 
@@ -19,7 +19,11 @@ urlpatterns = [
 
     path('news/', views.news, name="news"),
     path('news/<int:news_id>/', views.newsDetail, name="news-detail"), 
-    path('like/<int:pk>/', views.LikeNews, name="like_news"), 
+    path('AddTOCNews/', views.addTOCNews, name='add-toc-news'),
+    path('AddNews/', views.addNews, name="add-news"),
+
+    path('contactUs/', views.contacts, name='contact-us')
+    # path('like/<int:pk>/', views.LikeNews, name="like_news"), 
 ]
 if settings.DEBUG:
      urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

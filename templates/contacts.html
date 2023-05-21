@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Send FeedBack</h1>
+    {%if user.is_authenticated %}
+    <form method="post" enctype="multipart/form-data">
+        <img src="" alt="" id="snipped">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+
+        <button type="submit" id="add">Send</button>
+    </form>
+    {%else%}
+    <a href="(%url 'signin'%)">Sign In</a> First!
+    {%endif%}
+</body>
+</html>

@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+import environ
+# Initialise environment variables
+env = environ.Env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -154,7 +157,12 @@ LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PASSWORD	= os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER	= 'dagmniko79@gmail.com'
+EMAIL_PORT = 587
+# EMAIL_USE_SSL = False
+EMAIL_USE_TLS = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

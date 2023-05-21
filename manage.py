@@ -3,7 +3,11 @@
 import os
 import sys
 
+import environ
+# Initialise environment variables
 
+
+# environ.Env.read_env()
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'insa.settings')

@@ -10,8 +10,9 @@ class BlogForm(ModelForm):
         fields = '__all__'
         widgets = {
             'title': forms.TextInput(attrs={'id': 'title'}),
-            'content': forms.Textarea(attrs={'id': 'contenter'}),
+            # 'content': forms.Textarea(attrs={'id': 'contenter'}),
             'tags': forms.CheckboxSelectMultiple(attrs={'id': 'tags'}),
+            'likes': forms.CheckboxSelectMultiple(attrs={'id': 'likes'}),
             'image': forms.FileInput(attrs={'id': 'image'}),
             'referral': forms.URLInput(attrs={'id': 'referral'}),
         }
@@ -27,7 +28,17 @@ class VideoForm(ModelForm):
             'thumbnail': forms.FileInput(),
             'referral': forms.CheckboxSelectMultiple(),
         }
-        
+class NewsForm(ModelForm):
+    class Meta:
+        model = News
+        fields = '__all__'
+
+
+class ContactForm(ModelForm):
+    class Meta:
+        model = Contact
+        fields = '__all__'
+
 class CommentForm(ModelForm):
     class Meta:
         model = Comment

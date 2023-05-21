@@ -13,10 +13,12 @@ class Blog(models.Model):
     content = models.TextField()
     date_posted = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(Account, on_delete=models.CASCADE)
-    referral = models.ManyToManyField('Referral', blank=True) 
+    referral = models.ManyToManyField('Referral', related_name='blog_referrals', blank=True) 
     tags = models.ManyToManyField('Tag', blank=True)
-    #like
+    likes = models.ManyToManyField(Account, related_name='blog_likes', blank=True)
     #share
+    def total_likes(self):
+        return self.likes.count()
     
     def __str__(self):
         return self.title
@@ -27,8 +29,13 @@ class Blog(models.Model):
 
 class TableOfContent(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, blank=True, null=True)
+    news = models.ForeignKey('News', on_delete=models.CASCADE, blank=True, null=True)
     TOCtitle = models.CharField(max_length=550)
     placeId = models.CharField(max_length=150) #more like an id for its section like #home
+    def clean(self):
+        if (self.blog and self.news) or (not self.blog and not self.news):
+            raise ValidationError("You can enter only one of the two fields(blog or news)")
+        
 
 class Video(models.Model):
     title = models.CharField(max_length=100)
@@ -45,8 +52,10 @@ class Video(models.Model):
         null=True,
         help_text="Enter your youtube or other page's url."
     )
-    #like
+    likes = models.ManyToManyField(Account, related_name='video_likes', blank=True)
     #share
+    def total_likes(self):
+        return self.likes.count()
 
     def __str__(self):
         return self.title
@@ -117,3 +126,11 @@ class Replies(models.Model):
 
     def __str__(self):
         return self.content
+    
+class Contact(models.Model):
+    subject = models.CharField(max_length=225)
+    body = models.TextField()
+
+    def __str__(self):
+        return self.subject
+

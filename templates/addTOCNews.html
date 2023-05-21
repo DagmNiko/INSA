@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Add your table of contents</h1>
+    {%if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        {{toc.as_p}}
+        <button type="submit" id="add">Add subtitle</button>
+    </form>
+    <button onclick="some()">➕</button>
+    
+    {%else%}
+    <a href="(%url 'signin'%)">Sign In</a> First!
+    {%endif%}
+
+    <script>
+        let span = document.querySelector('body > button');
+        
+        let form = document.querySelector('form');
+        let body = document.querySelector('body');
+        
+        
+        const some = () => {
+            let TOCprev = document.querySelector('#id_TOCtitle');
+            TOCprev.id = `id_TOCtitle${Math.random()}`
+            TOCprev.name = `TOCtitle${TOCprev.id.slice(11)}`
+
+            let placeIdPrev = document.querySelector('#id_placeId');
+            placeIdPrev.id = `id_placeId${TOCprev.id.slice(11)}`
+            placeIdPrev.name = `placeId${TOCprev.id.slice(11)}`
+
+
+            let btn = document.querySelector('#add');
+            
+            btn.remove()
+            form.innerHTML += `
+
+        {{toc.as_p}}
+        <button type="submit" id="add">Add subtitle</button>    
+         
+`;
+            // document.querySelector(`#${idPrev}`).value = valPrev;
+
+            let select = document.getElementsByTagName('select');
+            
+            document.querySelector('[name="news"]').value = select[0].lastElementChild.innerHTML
+        }
+    </script>
+</body>
+</html>
