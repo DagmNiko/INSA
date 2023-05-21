@@ -158,7 +158,7 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD	= os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD	= "gdziomajavdwkilu"
 EMAIL_HOST_USER	= 'dagmniko79@gmail.com'
 EMAIL_PORT = 587
 # EMAIL_USE_SSL = False
