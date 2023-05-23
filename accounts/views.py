@@ -25,7 +25,15 @@ class AccountEditView(generic.UpdateView):
 	
 def ProfilePageView(request, usr):
 	acc = Account.objects.get(username=usr)
+	if request.method == 'POST':
+		current_account = request.user
+		action = request.POST['follow']
+		if action == 'follow':
+			current_account.follows.add(acc)
+		else:
+			current_account.follows.remove(acc)
 
+		
 	return render(request, 'profilePage.html', {'acc': acc})
 
 def AccountSignIn(request, *args, **kwargs):

@@ -38,6 +38,7 @@ class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     username = models.CharField(max_length=255, unique=True)
+    follows = models.ManyToManyField("self", related_name='followed_by', symmetrical=False, blank=True)
     email = models.EmailField(verbose_name='email', max_length=255, unique=True)
     role = models.CharField(max_length=255, blank=True)
     bio = models.TextField(max_length=225, blank=True)

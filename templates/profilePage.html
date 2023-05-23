@@ -18,5 +18,31 @@
     {%else%}
     No profile picture available
     {%endif%}
+    <br>
+    <br>
+    <hr>
+    <h4>following</h4>
+    <ul>
+        {%for following in acc.follows.all%}
+        <li><a href="{%url 'profile-page' following.username%}">@{{following.username}}</a></li>
+        {%endfor%}
+    </ul>
+    <h4>followers</h4>
+    <ul>
+        {%for following in acc.followed_by.all%}
+        <li><a href="{%url 'profile-page' following.username%}">@{{following.username}}</a></li>
+        {%endfor%}
+    </ul>
+    <form method="post">
+        {%csrf_token%}
+    {% if request.user.is_authenticated %}
+        {% if acc in request.user.follows.all %}
+            <button type="submit" name="follow" value="unfollow">Unfollow</button>
+        {%else%}
+            <button type="submit" name="follow" value="follow">Follow</button>
+        {%endif%}
+    {%endif%}
+    </form>
+    
 </body>
 </html>
