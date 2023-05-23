@@ -1,13 +1,32 @@
 from django.shortcuts import render, redirect
 from django.views import generic
+
+from accounts.models import Account
 from .forms import AccountCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.backends import BaseBackend
 # Create your views here.
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserChangeForm
+from django.views import generic
 
 
+
+class AccountEditView(generic.UpdateView):
+	form_class = UserChangeForm
+	template_name = 'editProfilePage.html'
+
+	def get_success_url(self):
+		return reverse_lazy('profile-page', kwargs={'usr':self.kwargs['usr']})
+	def get_object(self):
+		return Account.objects.get(username=self.kwargs['usr'])
+	
+	
+def ProfilePageView(request, usr):
+	acc = Account.objects.get(username=usr)
+
+	return render(request, 'profilePage.html', {'acc': acc})
 
 def AccountSignIn(request, *args, **kwargs):
 	user = request.user
