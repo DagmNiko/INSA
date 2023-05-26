@@ -35,6 +35,7 @@ class MyAccountManager(BaseUserManager):
 
 
 class Account(AbstractBaseUser):
+    applied = models.BooleanField(default=False)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     username = models.CharField(max_length=255, unique=True)

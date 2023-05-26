@@ -1,0 +1,344 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+
+:root {
+    --primary: blue;
+    --secondary: red;
+}
+
+*, *::after, *::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, 
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: black;
+    color: white;
+}
+nav {
+    position: fixed;
+    display: flex;
+    width: 100%;
+    height: 7vh;
+    align-items: center;
+    justify-content: space-around;
+    /* border: 1px solid red; */
+    background: rgba(0, 0, 0, 0.345);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+}
+button, a {
+    cursor: pointer;
+}
+.auth {
+    height: fit-content;
+    display: flex;
+    align-items: center;
+}
+main {
+    position: relative;
+    /* top: 7vh; */
+    z-index: 4;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: 100vh;
+    overflow-x: hidden;
+}
+main::-webkit-scrollbar{
+    display: none;
+}
+section {
+    scroll-snap-align: start;
+}
+.pp {
+    width: 3.2vh;
+    height: 3.2vh;
+    border-radius: 50%;
+
+}
+.profile {
+    position: relative;
+    width: 3.45vh;
+    height: 3.45vh;
+    background: linear-gradient(to bottom, var(--primary), var(--secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s ease-in-out;
+}
+.profile:hover {
+    background: linear-gradient(to bottom,var(--secondary), var(--primary));
+    /* transform: rotate(360deg); */
+}
+
+nav button {
+    background: transparent;
+    color: whitesmoke;
+    font-weight: bolder;
+    font-size: 1.1rem;
+    border: none;
+    outline: none;
+    margin: .5rem;
+    transition: all .2s ease-in-out;
+}
+.menu:hover {
+    transform: scale(1.1);
+    color: red;
+    text-shadow: 0.3rem .3rem rgba(179, 0, 0, 0.641);
+}
+
+nav .signin:hover, nav .login:hover {
+    transform: scale(1.1);
+    color: transparent;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+nav .logout {
+    color: red;
+    margin-right: 1rem;
+    border-radius: 5px;
+    border: 2px solid red;
+    padding: .5rem;
+}
+nav .logout:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+
+
+.hero {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.hero .left {
+    flex: 1;
+    position: relative;
+    left: 4rem;
+}
+.hero svg {
+    flex: 1;
+}
+
+.hero .slogan {
+    position: relative;
+    bottom: 3rem;
+    font-size: 5rem;
+    color: transparent;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    padding: 3px;
+    background-clip: text;
+    animation: glitch 1s linear .4s forwards;
+    animation-iteration-count: 3;
+}
+
+@keyframes glitch {
+    25% {
+        color: rgb(5, 5, 168);
+        text-shadow: .4rem .4rem rgb(115, 0, 0);
+    }
+    80% {
+        color: transparent;
+        text-shadow: none;
+    }
+
+}
+
+.hero .desc {
+    margin: .5rem;
+    line-height: 1.15;
+}
+
+.hero .cta {
+    width: 8rem;
+    height: 3rem;
+    position: relative;
+    top: 3rem;
+    left: .4rem;
+    border-radius: 25px;
+    background: linear-gradient(to bottom right, var(--primary),var(--secondary));
+    border: none;
+    font-weight: bolder;
+    font-size: 1.1rem;
+    color: white;
+    transition: all .3s ease-in-out;
+}
+
+.hero .cta:hover {
+    color: transparent;
+    background: linear-gradient(to bottom right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    transform: scale(1.1);
+}
+
+
+
+.second {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.second .left {
+    flex: 1;
+    position: relative;
+    left: 4rem;
+}
+.second svg {
+    flex: 1;
+}
+.second .slogan {
+    position: relative;
+    bottom: 3rem;
+    font-size: 5rem;
+    color: transparent;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    padding: 3px;
+}
+.second .desc {
+    width: 70%;
+    margin: .5rem;
+    line-height: 1.15;
+}
+
+.second .cta {
+    width: 8rem;
+    height: 3rem;
+    position: relative;
+    top: 3rem;
+    left: .4rem;
+    border-radius: 5px;
+    background: linear-gradient(to bottom right, var(--primary),var(--secondary));
+    border: none;
+    font-weight: bolder;
+    font-size: 1.1rem;
+    color: white;
+    transition: all .3s ease-in-out;
+}
+.second .cta:hover {
+    box-shadow: -.5rem .5rem var(--secondary),-1rem 1rem var(--primary);
+
+}
+
+#Ellipse3 {
+    transform: translateX(-8.8rem);
+    animation: switchOn 1s ease-in-out .3s forwards;
+}
+
+@keyframes switchOn {
+    to {
+        transform: rotate(360deg);
+        transform: translateX(0);
+    }
+}
+
+#user {
+    transform: translate(-8rem, -15rem);
+    opacity: 0;
+    animation: appear 1s ease-in-out 1.35s forwards;
+
+}
+#password {
+    transform: translate(8rem, -7rem);
+    opacity: 0;
+    animation: appear 1s ease-in-out 1.35s forwards;
+}
+#card {
+    transform: translate(22rem, 13rem);
+    opacity: 0;
+    animation: appear 1s ease-in-out 1.35s forwards;
+}
+#Rectangle2 {
+    opacity: 0;
+    animation: appear 1s ease-in-out 1.2s forwards;
+}
+@keyframes appear {
+    to {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+
+.third {
+    width: 100%;
+    height: 100vh;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container {
+    background: linear-gradient(to left, rgb(253, 2, 2) , rgb(1, 0, 0), rgb(1, 0, 0));
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 70%;
+    height: 40%;
+    border-radius: 15px;
+    justify-content: center;
+    padding: 2rem;
+}
+.container .slogan {
+    font-size: 3rem;
+    width: 70%;
+    color: var(--primary);
+    font-weight: bolder;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.container .desc {
+    width: 70%;
+    margin-top: .3rem;
+}
+.container .smallTxt {
+    margin-bottom: 1rem;
+}
+.container button {
+    position: relative;
+    top: 1.5rem;
+    background-color: transparent;
+    color: whitesmoke;
+    outline: none;
+    border: none;
+    transition: all .3s ease-in-out;
+
+    font-weight: lighter;
+}
+.container button i {
+    margin: 0 .5rem;
+    transform: rotate(45deg) scale(1.3);
+}
+.container button:hover {
+    color: transparent;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    transform: scale(1.1);
+}
+.container button:hover i {
+    color: var(--primary);
+}
+

@@ -14,7 +14,7 @@ class AccountCreationForm(UserCreationForm):
 
 	class Meta:
 		model = Account
-		exclude = ['is_active','date_joined', 'last_login', 'is_admin','is_staff', 'is_superuser', 'id']
+		exclude = ['is_active','date_joined', 'last_login', 'is_admin','is_staff', 'is_superuser', 'id', 'applied']
 
 	def clean_email(self):
 		email = self.cleaned_data['email'].lower()

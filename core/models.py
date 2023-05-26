@@ -134,3 +134,27 @@ class Contact(models.Model):
     def __str__(self):
         return self.subject
 
+class ProofImages(models.Model):
+    image = models.ImageField(upload_to="ApplicantsProof", blank=True, null=True)
+    to = models.ForeignKey('TalentApplication', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.image.url
+
+class TalentApplication(models.Model):
+    email = models.ForeignKey(Account, on_delete=models.CASCADE)
+    talent = models.CharField(max_length=225)
+    age = models.IntegerField()
+    # proof_images = models.ForeignKey(ProofImages, on_delete=models.CASCADE)
+    define_yourself = models.TextField(max_length=300)
+    application_deadline = models.DateField()
+    applied_date = models.DateField(auto_now=True)
+    def save_model(self, request, obj, form, change):
+        if self.email.applied == True:
+            raise ValidationError("You have already applied")
+        else:
+            self.email.applied = True
+            return super().save()
+    def __str__(self):
+        return self.application_deadline
+    
