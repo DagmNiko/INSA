@@ -16,7 +16,7 @@ const observer = new IntersectionObserver((entries) => {
             rectangle2.classList.add('Rectangle2Animate');
         }else {
             ellipse3.classList.remove('Ellipse3Animate');
-            user.classList.remove('userAnimate');
+            user.style.animation = "";
             password.classList.remove('passwordAnimate');
             card.classList.remove('cardAnimate');
             rectangle2.classList.remove('Rectangle2Animate');
