@@ -10,7 +10,7 @@ const observer = new IntersectionObserver((entries) => {
         console.log(entry)
         if (entry.isIntersecting) {
             ellipse3.classList.add('Ellipse3Animate');
-            user.classList.add('userAnimate');
+            user.style.animation = "appear 1s ease-in-out 1.35s forwards";
             password.classList.add('passwordAnimate');
             card.classList.add('cardAnimate');
             rectangle2.classList.add('Rectangle2Animate');
