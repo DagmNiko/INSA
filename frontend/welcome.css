@@ -135,13 +135,11 @@ nav .logout:hover {
 }
 .hero .svg {
     position: relative;
-    flex: 1;
+    flex: .5;
     /* max-width: 60%; */
     border: 1px solid red;
 }
-.hero svg {
 
-}
 .hero .left {
     position: relative;
     top: 1rem;
