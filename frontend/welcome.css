@@ -252,9 +252,10 @@ nav .logout:hover {
 
 #Ellipse3 {
     transform: translateX(-8.8rem);
+}
+.Ellipse3Animate {
     animation: switchOn 1s ease-in-out .3s forwards;
 }
-
 @keyframes switchOn {
     to {
         transform: rotate(360deg);
@@ -265,21 +266,31 @@ nav .logout:hover {
 #user {
     transform: translate(-8rem, -15rem);
     opacity: 0;
-    animation: appear 1s ease-in-out 1.35s forwards;
 
+}
+.userAnimate {
+    animation: appear 1s ease-in-out 1.35s forwards;
+  
 }
 #password {
     transform: translate(8rem, -7rem);
     opacity: 0;
+}
+.passwordAnimate {
     animation: appear 1s ease-in-out 1.35s forwards;
 }
 #card {
     transform: translate(22rem, 13rem);
     opacity: 0;
+}
+.cardAnimate {
+  
     animation: appear 1s ease-in-out 1.35s forwards;
 }
 #Rectangle2 {
     opacity: 0;
+}
+.Rectangle2Animate {
     animation: appear 1s ease-in-out 1.2s forwards;
 }
 @keyframes appear {
