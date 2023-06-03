@@ -3,9 +3,9 @@ const observer = new IntersectionObserver((entries) => {
         console.log(entry)
         if (entry.isIntersecting) {
             
-            entry.target.classList.add('show')
+            document.querySelector(".second svg").classList.add('animate')
         }else {
-            entry.target.classList.remove('show')
+            document.querySelector(".second svg").classList.remove('animate')
         }
     });
 });
